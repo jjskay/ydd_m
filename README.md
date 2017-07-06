@@ -5,15 +5,22 @@
 ## Build Setup
 
 ``` bash
-# install dependencies
+# 依赖安装
 $ npm install # Or yarn install
 
-# serve with hot reload at localhost:3000
+# 在开发环境中运行
 $ npm run dev
 
-# build for production and launch server
+# 在测试环境部署
+$ npm run build-dev
+$ node server.js
+
+# 生产环境部署
+全局安装PM2 
+npm i pm2 -g
+
 $ npm run build
-$ npm start
+$ pm2 start server.js
 
 # generate static project
 $ npm run generate
