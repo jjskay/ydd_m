@@ -11,19 +11,30 @@
     "dev": "nuxt",
     "build": "cross-env NODE_ENV=production nuxt build",
     "build-dev": "cross-env NODE_ENV=dev nuxt build",
-    "start": "nuxt start",
+    "start": "cross-env NODE_ENV=production && node server.js",
     "generate": "nuxt generate",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
-    "precommit": "npm run lint"
+    "precommit": "npm run lint",
+    "e2e": "node test/e2e/runner.js"
   },
   "devDependencies": {
+    "axios": "^0.16.2",
     "babel-eslint": "^7.1.1",
+    "chromedriver": "^2.31.0",
     "cross-env": "^5.0.1",
+    "cross-spawn": "^5.1.0",
+    "css-loader": "^0.28.4",
     "eslint": "^3.15.0",
     "eslint-config-standard": "^6.2.1",
     "eslint-loader": "^1.6.1",
     "eslint-plugin-html": "^2.0.0",
     "eslint-plugin-promise": "^3.4.1",
-    "eslint-plugin-standard": "^2.0.1"
+    "eslint-plugin-standard": "^2.0.1",
+    "less": "^2.7.2",
+    "less-loader": "^4.0.5",
+    "nightwatch": "^0.9.16",
+    "phantomjs-prebuilt": "^2.1.14",
+    "selenium-server": "^3.4.0",
+    "vue-style-loader": "^3.0.1"
   }
 }

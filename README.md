@@ -19,6 +19,10 @@ $ node server.js
 全局安装PM2 
 npm i pm2 -g
 
+# e2e 测试
+先执行命令启动项目: npm run dev
+在执行e2e测试命令: npm run e2e
+
 $ npm run build
 $ pm2 start server.js
 

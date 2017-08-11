@@ -16,16 +16,17 @@ const nuxt = new Nuxt(config)
 app.use(nuxt.render)
 
 // Build only in dev mode
-if (config.dev) {
-    nuxt.build()
+// if (config.dev) {
+nuxt.build()
     .catch((error) => {
         // eslint-disable-line no-console
         console.error(error)
         process.exit(1)
     })
-}
+// }
 
 // Listen the server
-app.listen(port, host)
+// app.listen(port, host)
+app.listen(port, '0.0.0.0')
 // eslint-disable-line no-console
 console.log(`Nuxt.js SSR Server listening on ${host} : ${port}, at ${new Date().toLocaleString()}`)

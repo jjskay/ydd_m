@@ -26,20 +26,36 @@ module.exports = {
         ],
         link: [
           { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
+        ],
+        script: [
+            {
+                async: 'async',
+                defer: 'defer',
+                type: 'text/javascript',
+                src: 'https://static.mlinks.cc/scripts/dist/mlink.min.js'
+                // innerHTML: ``
+            }
         ]
     },
-  /*
-  ** Customize the progress-bar color
-  */
+    vendor: [
+        'axios'
+    ],
+    /*
+    ** Customize the progress-bar color
+    */
     loading: { color: '#3B8070' },
-  /*
-  ** Build configuration
-  */
+    /*
+    ** Build configuration
+    */
     build: {
     /*
     ** Run ESLINT on save
     */
         extend(config, ctx) {
+            config.resolve.alias['~config'] = path.join(__dirname, 'config')
+            config.resolve.alias['~utils'] = path.join(__dirname, 'utils')
+            // config.resolve.alias['~assets'] = path.join(__dirname, 'assets')
+
             if (ctx.isClient) {
                 config.module.rules.push({
                     enforce: 'pre',
@@ -49,7 +65,10 @@ module.exports = {
                 })
             }
 
-            config.resolve.alias['~config'] = path.join(__dirname, 'config')
+            // config.module.rules.push({
+            //     test: /\.less/,
+            //     loader: 'vue-style-loader!css-loader!less-loader'
+            // })
         }
     },
     babel: {
@@ -59,5 +78,11 @@ module.exports = {
             'transform-runtime'
         ],
         comments: true
-    }
+    },
+
+    css: [
+        // 'swiper/dist/css/swiper.css',
+        // 'highlight.js/styles/ocean.css',
+        { src: '~assets/less/app.less', lang: 'less' }
+    ]
 }
