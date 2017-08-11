@@ -85,12 +85,12 @@
                         border: 1px solid #47B913;
                         border-radius: 0.3rem;
                         overflow: hidden;
-                        padding: 0 0.3rem 0 1.9rem;
+                        padding: 0 0.3rem 0 2.3rem;
                         &:before{
                             content: '特';
                             position: absolute;
                             height: 100%;
-                            padding: 0 0.2rem;
+                            padding: 0 0.4rem;
                             background: #47B913;
                             color: #fff;
                             left: 0;

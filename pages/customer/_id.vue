@@ -16,7 +16,7 @@
                     </div>
 
                     <p class="customer-info-item-list">
-                        <i class="iconfont icon-address"></i>
+                        <i class="iconfont icon-weizhi"></i>
                         <span>江苏省无锡市</span>
                     </p>
                     <p class="customer-info-item-list">
@@ -182,7 +182,7 @@
         overflow: hidden;
     }
     .customer-info-item-list .iconfont{
-        padding-right: 0.5rem;
+        padding-right: 0.8rem;
         color: #a9a9a9;
         font-size: 1.8rem;
     }
@@ -195,7 +195,7 @@
         left: 0;
         z-index: 100;
         background: #fff;
-        box-shadow: 0 -4px 4px 0 #EAEAEA;
+        box-shadow: 0 -4px 12px 0 #EAEAEA;
         text-align: center;
     }
     .customer-info-footer a{

@@ -1,6 +1,7 @@
 # ydd_m
 
 > Nuxt.js project
+> nuxt.js官网： https://zh.nuxtjs.org/
 
 ## Build Setup
 
@@ -21,7 +22,7 @@ npm i pm2 -g
 
 # e2e 测试
 先执行命令启动项目: npm run dev
-在执行e2e测试命令: npm run e2e
+再执行e2e测试命令: npm run e2e
 
 $ npm run build
 $ pm2 start server.js
