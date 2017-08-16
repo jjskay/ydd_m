@@ -54,17 +54,14 @@
             <div class="customer-info-list-box">
                 <div class="title">发布的出售信息（<span>5</span>条）</div>
                 <div class="customer-info-list-conttent">
-                    <Item v-for="item in [1,2,3]" :key="new Date().getTime()"/>
+                    <Item v-for="item in [1,2,3]" item="{}" :key="new Date().getTime()"/>
                 </div>
-            </div>
-
-            <div class="customer-info-open-app-btn">
-                <span @click="downloadApp" id="btnOpenApp">打开APP查看所有信息<i class="iconfont icon-right"></i></span>
             </div>
         </div>
 
         <div class="customer-info-footer">
             <a href="tel:13764567708" class="btn">打电话</a>
+            <span @click="downloadApp" id="btnOpenApp">打开APP查看信息</span>
         </div>
     </div>
 </template>
@@ -198,15 +195,23 @@
         box-shadow: 0 -4px 12px 0 #EAEAEA;
         text-align: center;
     }
-    .customer-info-footer a{
-        display: inline-block;
-        padding: 0 2.5rem;
-        background: #47B913;
-        color: #fff;
-        height: 3rem;
-        line-height: 3rem;
-        margin-top: 1rem;
-        border-radius: 0.3rem;
+    .customer-info-footer {
+        a, span{
+            display: inline-block;
+            padding: 0 3rem;
+            background: #47B913;
+            color: #fff;
+            height: 3rem;
+            line-height: 3rem;
+            margin-top: 1rem;
+            border-radius: 0.3rem;
+        }
+
+        span{
+            margin-left: 2rem;
+            padding: 0 1rem;
+        }
+        
     }
     .customer-info-content{
         padding-top: 7rem;
@@ -229,19 +234,6 @@
         line-height: 4rem;
         border-bottom: 1px solid #dbdbdb;
         color: #212121;
-    }
-    .customer-info-open-app-btn{
-        text-align: center;
-        padding: 1rem 0;
-        span{
-            display: inline-block;
-            height: 3rem;
-            line-height: 3rem;
-            color: #47B913;
-            i{
-                font-size: 1.4rem;
-            }
-        }
     }
     @media screen and (max-width: 375px) and (min-width: 321px){
         .item-inner .title b{

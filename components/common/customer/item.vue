@@ -1,5 +1,5 @@
 <template>
-  	<a class="media-list customer-list-item">
+  	<a class="media-list customer-list-item" :class="{'buy-item': item && item.type && item.type == 1}">
 	    <div class="item-content">
 	        <div class="item-media col-27">
 	            <img src="http://img.yudada.com/img/user_head/20170807/1502097001364_7387.png?x-oss-process=image/resize,m_fill,h_100,w_100/format,png" alt="头像">
@@ -22,18 +22,26 @@
 </template>
 
 <script>
-  export default {
-      name: 'customer-list-item',
-      props: {
-          item: Object
-      },
-      methods: {
+    /**
+     *  出售/求购列表的item
+     */
+    export default {
+        name: 'customer-list-item',
+        props: {
+            item: {
+                type: Object,
+                default: {
+                    type: 1
+                }
+            }
+        },
+        methods: {
 
-      },
-      computed: {
+        },
+        computed: {
 
-      }
-  }
+        }
+    }
 </script>
 
 <style lang="less" scoped>
