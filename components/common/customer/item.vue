@@ -6,7 +6,7 @@
 	        </div>
 	        <div class="item-inner col-73">
 	            <p class="title">
-	                <span>黑鱼</span>
+	              <span>黑鱼</span>
                   <i>x.xx元/斤</i>
 	            </p>
 

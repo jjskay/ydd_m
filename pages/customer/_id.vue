@@ -9,7 +9,7 @@
                                 <img src="http://img.yudada.com/img/user_head/20170807/1502097001364_7387.png?x-oss-process=image/resize,m_fill,h_100,w_100/circle,r_100/format,png" alt="头像">
                             </div>
                             <div class="item-inner">
-                                <div class="title"><b>路人甲</b><span class="iconfont icon-v2"></span></div>
+                                <div class="title"><b>路人甲路人甲路人甲路人甲</b><span class="iconfont icon-v2"></span></div>
                                 <p>加入时间：2017年7月28日</p>
                             </div>
                         </div>
