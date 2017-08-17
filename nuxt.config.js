@@ -54,6 +54,8 @@ module.exports = {
         extend(config, ctx) {
             config.resolve.alias['~config'] = path.join(__dirname, 'config')
             config.resolve.alias['~utils'] = path.join(__dirname, 'utils')
+            config.resolve.alias['~components'] = path.join(__dirname, 'components')
+            config.resolve.alias['~plugins'] = path.join(__dirname, 'plugins')
             // config.resolve.alias['~assets'] = path.join(__dirname, 'assets')
 
             if (ctx.isClient) {
