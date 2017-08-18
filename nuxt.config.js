@@ -2,11 +2,20 @@ var path = require('path')
 var fs = require('fs')
 
 var baseUrl = 'https://api.test.yudada.com/'
+var baseMwebUrl = 'http://m.test.yudada.com/'
+var basrMwebHttpsUrl = 'https://m.t.yudada.com/'
+var appId = 'wx76ea51e6e55cca8e'
 if (process.env.NODE_ENV === 'production') {
+    baseMwebUrl = 'http://m.yudada.com/'
+    basrMwebHttpsUrl = 'https://m.yudada.com/'
     baseUrl = 'https://api.yudada.com/'
+    appId = 'wxa60093eda72f8b3e'
 }
 process.env.NODE_ENV && fs.writeFile('./config/server.json', JSON.stringify({
-    baseUrl: baseUrl
+    baseUrl: baseUrl,
+    baseMwebUrl: baseMwebUrl,
+    basrMwebHttpsUrl: basrMwebHttpsUrl,
+    appId: appId
 }), (err) => {
     if (err) throw err
     console.log('It\'s saved!')
@@ -33,6 +42,13 @@ module.exports = {
                 defer: 'defer',
                 type: 'text/javascript',
                 src: 'https://static.mlinks.cc/scripts/dist/mlink.min.js'
+                // innerHTML: ``
+            },
+            {
+                async: 'async',
+                defer: 'defer',
+                type: 'text/javascript',
+                src: 'http://res.wx.qq.com/open/js/jweixin-1.0.0.js'
                 // innerHTML: ``
             }
         ]

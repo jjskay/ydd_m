@@ -2,6 +2,7 @@
  *  所以的action都在这个文件
  */
 import Service from '~plugins/axios'
+import baseUrl from '~config/server'
 
 // global actions
 export const actions = {
@@ -27,5 +28,32 @@ export const actions = {
                 }, err => {
                     commit('REQUEST_ADMIN_INFO_FAILURE', err)
                 })
+    },
+
+    // 获取用户是否绑定手机号
+    loadBindUserState({ commit }, params = {}) {
+        return Service.get(`${baseUrl.basrMwebHttpsUrl}isMPBoundWithPhone`)
+                .then(response => {
+                    // console.log(response)
+                    if (response && response.code === 1) {
+                        commit('bindUser/LOAD_BIND_USER_STATUS', response.data)
+                    }
+                }, err => {
+                    commit('REQUEST_ADMIN_INFO_FAILURE', err)
+                })
+    },
+    load({ commit }, params = {}) {
+        return Service.get('http://0.0.0.0:3000/get', {
+            params
+        })
+        .then(response => {
+            if (response && response.code === 1) {
+                commit('bindUser/LOAD_BIND_USER_STATUS', response.data)
+            }
+        })
+        .catch(err => {
+            // commit('REQUEST_ADMIN_INFO_FAILURE', err)
+            console.log(err)
+        })
     }
 }

@@ -1,13 +1,13 @@
 <template>
     <div class="page-user-bind" id="user_bind">
-        <div class="mask-panel" v-if="!success">
+        <div class="mask-panel" v-if="!bind">
             <div class="content">
                 <div class="title">绑定你的手机号</div>
                 <input type="number" name="" placeholder="请输入手机号">
                 <button type="" @click="bindUser">确认绑定</button>
             </div>
         </div>
-        <div class="success-bind" v-if="success">
+        <div class="success-bind" v-if="bind">
             <img src="../../assets/image/ic_success.png" alt="">
             <div class="success-title">
                 恭喜你，成功绑定账号
@@ -17,31 +17,44 @@
 </template>
 
 <script>
+  import baseUrl from '~config/server'
+
   export default {
-      name: 'user-bind',
+      name: 'bind-user',
       fetch({ store, params }) {
-          // return store.dispatch('loadArticles', params)
+          // return store.dispatch('loadBindUserState')
       },
       head() {
           return {
-              title: '绑定手机号'
+              title: '绑定手机号',
+              meta: [
+                  {
+                      hid: 'keywords',
+                      name: 'keywords',
+                      content: ''
+                  },
+                  { hid: 'description', name: 'description', content: '' }
+              ]
           }
       },
       data() {
-          return {
-              success: false
-          }
+          return {}
       },
       created() {
-
+          this.$store.dispatch('loadBindUserState')
+          if (this.$route.params && !this.$route.params.code) {
+              this.$store.dispatch('load', {url: `${baseUrl.baseMwebUrl}` + this.$route.path})
+          }
       },
       updated() {
           // 初始化魔窗事件
           // eslint-disable-next-line
-        
+          
       },
       computed: {
-
+          bind() {
+              return this.$store.state.bindUser.isBind
+          }
       },
       methods: {
           bindUser() {

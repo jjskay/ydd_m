@@ -1,5 +1,5 @@
 <template>
-  	<a class="media-list customer-list-item" :class="{'buy-item': item && item.type && item.type == 1}">
+  	<a :href="href" class="media-list customer-list-item" :class="{'buy-item': item && item.type && item.type == 1}">
 	    <div class="item-content" v-if="item.type == 2">
 	        <div class="item-media col-27">
 	            <img :src="item.imgePath + '?x-oss-process=image/resize,m_fill,h_100,w_100/format,png'" alt="头像">
@@ -65,6 +65,7 @@
      *  出售/求购列表的item
      */
     import {releaseInfoDate, getMarketTimeStr, getBuyTimeText} from '~utils/dateFormat'
+    import baseUrl from '~config/server'
 
     export default {
         name: 'customer-list-item',
@@ -125,6 +126,9 @@
                     res = 'x.xx元/斤'
                 }
                 return res
+            },
+            href() {
+                return `${baseUrl.baseMwebUrl}demandInfo/${this.item.id}`
             }
         }
     }
@@ -138,6 +142,7 @@
     display: block;
     border-bottom: 1px solid #dbdbdb;
     padding: 1rem;
+    color: #727272;
 
     &.buy-item{
         white-space: normal;
