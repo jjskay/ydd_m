@@ -6,15 +6,21 @@ const service = axios.create({
     baseURL: apiConfig.baseUrl
 })
 
-// 拦截器
+// 通用的请求拦截
 service.interceptors.request.use(config => {
     return config
 }, error => {
     return Promise.reject(error)
 })
 
+// 通用的返回拦截
 service.interceptors.response.use(response => {
-    return response
+    const code = response.data.code
+    if (code === 1) {
+        return response.data
+    } else {
+
+    }
 }, error => {
     return Promise.reject(error)
 })

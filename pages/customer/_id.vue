@@ -6,30 +6,30 @@
                     <div class="media-list">
                         <div class="item-content">
                             <div class="item-media">
-                                <img src="http://img.yudada.com/img/user_head/20170807/1502097001364_7387.png?x-oss-process=image/resize,m_fill,h_100,w_100/circle,r_100/format,png" alt="头像">
+                                <img :src="getImgHead" alt="头像">
                             </div>
                             <div class="item-inner">
-                                <div class="title"><b>路人甲</b><span class="iconfont icon-v2"></span></div>
-                                <p>加入时间：2017年7月28日</p>
+                                <div class="title"><b>{{customersInfo.nickname || '匿名用户'}}</b><span class="iconfont" :class="customersInfo.level ? 'icon-v' + customersInfo.level : ''"></span></div>
+                                <p>加入时间：{{getYMD(customersInfo.createTime)}}</p>
                             </div>
                         </div>
                     </div>
 
-                    <p class="customer-info-item-list">
+                    <p class="customer-info-item-list" v-hide="!customersInfo.provinceName && !customersInfo.cityName">
                         <i class="iconfont icon-weizhi"></i>
-                        <span>江苏省无锡市</span>
+                        <span>{{customersInfo.provinceName + customersInfo.cityName}}</span>
                     </p>
                     <p class="customer-info-item-list">
                         <i class="iconfont icon-phone"></i>
-                        <span>13000000000</span>
+                        <span>{{customersInfo.phone}}</span>
                     </p>
-                    <p class="customer-info-item-list">
+                    <p class="customer-info-item-list" v-if="customersInfo.name">
                         <i class="iconfont icon-user-name"></i>
-                        <span>张三</span>
+                        <span>{{customersInfo.name}}</span>
                     </p>
-                    <p class="customer-info-item-list">
+                    <p class="customer-info-item-list" v-if="customersInfo.enterpriseName">
                         <i class="iconfont icon-company"></i>
-                        <span>XXXX有限公司</span>
+                        <span>{{customersInfo.enterpriseName}}</span>
                     </p>
                 </div>
             </div>
@@ -38,23 +38,35 @@
         <div class="customer-info-content">
             <div class="customer-info-content-top">
                 <div class="col-33">
-                    <p class="title">1笔</p>
+                    <p class="title">{{customersInfo.tradeCount}}笔</p>
                     <p>成交</p>
                 </div>
                 <div class="col-33">
-                    <p class="title">101次</p>
+                    <p class="title">{{customersInfo.recentShopViews}}次</p>
                     <p>30天店铺浏览量</p>
                 </div>
                 <div class="col-33">
-                    <p class="title">2位</p>
+                    <p class="title">{{customersInfo.invitedUsersCount}}位</p>
                     <p>已邀请好友</p>
+                </div>
+            </div>
+ 
+            <div class="customer-info-list-box sale-info-list">
+                <div class="title">发布的出售信息（<span>{{customersInfo.saleDemandsCount}}</span>条）</div>
+                <div class="customer-info-list-conttent">
+                    <Item v-for="item in customersInfo.saleDemands" :isAuth="isAuth" :item="item" :key="new Date().getTime()"/>
                 </div>
             </div>
 
             <div class="customer-info-list-box">
-                <div class="title">发布的出售信息（<span>5</span>条）</div>
+                <div class="title">发布的求购信息（<span>{{customersInfo.buyDemandsCount}}</span>条）</div>
                 <div class="customer-info-list-conttent">
-                    <Item v-for="item in [1,2,3]" item="{}" :key="new Date().getTime()"/>
+                    <Item 
+                        v-for="item in customersInfo.buyDemands" 
+                        :isAuth="isAuth" 
+                        :item="item" 
+                        :key="new Date().getTime()"
+                        :enterprise-name="customersInfo.enterpriseName || ''"/>
                 </div>
             </div>
         </div>
@@ -69,26 +81,35 @@
 <script>
   import Item from '~components/common/customer/item'
   import downloadApp from '~utils/downloadApp'
+  import {getYMD} from '~utils/dateFormat'
 
   export default {
       name: 'user-info',
       validate({ params }) {
-          return !!params.id
+          return (!!params.id && !Object.is(Number(params.id), NaN))
       },
       fetch({ store, params }) {
-          // return store.dispatch('loadArticles', params)
+          return store.dispatch('loadCustomersInfo', params)
       },
       components: {
           Item
       },
       head() {
           return {
-              title: '客户信息'
+              title: '客户信息',
+              meta: [
+                  {
+                      hid: 'keywords',
+                      name: 'keywords',
+                      content: ''
+                  },
+                  { hid: 'description', name: 'description', content: '' }
+              ]
           }
       },
-      created() {
-
-      },
+      // created() {
+      //     this.$store.dispatch('loadCustomersInfo', this.$route.params)
+      // },
       updated() {
           // 初始化魔窗事件
           // eslint-disable-next-line
@@ -97,16 +118,41 @@
               button: document.querySelector('span#btnOpenApp')
           })
       },
+      data() {
+          return {}
+      },
       computed: {
+          fetching() {
+              return this.$store.state.customer.fetching
+          },
+
+          customersInfo() {
+              return this.$store.state.customer.customerInfo
+          },
+          isAuth() {
+              const res = this.$store.state.customer.customerInfo
+              let auth = false
+              if (res && (res.enterpriseAuthenticationState === 1) || res.personalAuthenticationState === 1) {
+                  auth = true
+              }
+              return auth
+          },
+          getImgHead() {
+              let src = ''
+              const res = this.$store.state.customer.customerInfo
+              src = res.imgUrl ? (res.imgUrl + '?x-oss-process=image/resize,m_fill,h_100,w_100/circle,r_100/format,png') : '../img/head.png'
+              return src
+          }
 
       },
       methods: {
-          loadmoreArticle() {
+          loadcustomersInfo() {
               // this.$store.dispatch('loadArticles', this.nextPageParams)
           },
           downloadApp() {
               downloadApp('', 'dwonloadApp')
-          }
+          },
+          getYMD: getYMD
       }
   }
 </script>
@@ -228,6 +274,9 @@
     .customer-info-content-top .col-33 p.title{
         font-size: 1.8rem;
         color: #47B913;
+    }
+    .sale-info-list{
+        margin-bottom: 1rem;
     }
     .customer-info-list-box .title{
         text-align: center;

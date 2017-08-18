@@ -2,52 +2,58 @@
   	<a class="media-list customer-list-item" :class="{'buy-item': item && item.type && item.type == 1}">
 	    <div class="item-content" v-if="item.type == 2">
 	        <div class="item-media col-27">
-	            <img src="http://img.yudada.com/img/user_head/20170807/1502097001364_7387.png?x-oss-process=image/resize,m_fill,h_100,w_100/format,png" alt="头像">
+	            <img :src="item.imgePath + '?x-oss-process=image/resize,m_fill,h_100,w_100/format,png'" alt="头像">
 	        </div>
 	        <div class="item-inner col-73">
 	            <p class="title">
-	                <span>黑鱼</span>
-                  <i>x.xx元/斤</i>
+	                <span>{{item.fishTypeName}}</span>
+                  <i>{{getPrice}}</i>
 	            </p>
 
-              <p class="address"><span>辽宁省大连市</span>  |  <span>1斤以上</span></p>
-              <p class="auth"><span>我们家的特产</span><span>实名</span></p>
-              <p class="name"><span>蔡思雨<i class="iconfont icon-v2"></i></span><span>昨天发布</span></p>
-              <p class="sell-time"><i class="iconfont icon-selltime"></i>预售产品，2017年10月上旬开卖</p>
+              <p class="address"><span>{{item.address}}</span>  <span v-if="item.address && item.quantityTagList && item.quantityTagList.length">|</span>  <span v-if="item.quantityTagList && item.quantityTagList.length">{{item.quantityTagList.tagName}}</span></p>
+              <p class="auth">
+                  <span v-show="item.title">{{item.title}}</span>
+                  <span v-show="isAuth">实名</span>
+              </p>
+              <p class="name"><span>{{item.contactName || '匿名用户'}}<i v-if="item.level" class="iconfont icon-v2" :class="item.level ? 'icon-v' + item.level : ''"></i>
+                    </span>
+                    <span>{{releaseInfoDate(item.sort)}}</span>
+              </p>
+              <p class="sell-time" v-if="isSellTime"><i class="iconfont icon-selltime"></i>{{getMarketTimeStr(item.demandInfoSale.marketTime)}}</p>
 
-              <p v-for="item in [1,2,3]" :key="new Date().getTime()" class="cert">具备“苗种生产许可证”</p>
+              <p :key="new Date().getTime()" v-for="cert in item.fishCertificateList" class="cert seedling" :class="getCertType(cert.type)"></p>
 	        </div>
 	    </div>
         <div class="item-detail" v-else>
             <div class="list-block recomment-info">
                 <div class="item-content">
                     <div class="item-media">
-                        <img src="http://img.yudada.com/img//20170510/1494407846823_6738.png@1e_1c_2o_0l_110h_110w_90q.src" alt="">
+                        <img :src="getImgHead" alt="">
                     </div>
                     <div class="item-inner">
                         <div class="col-70">
                             <div class="rec-user-name">
-                                <span>接口测试</span>
-                                <i class="iconfont icon-v2"></i>
+                                <span>{{item.contactName || '匿名用户'}}</span>
+                                <i v-if="item.level" class="iconfont icon-v2" :class="item.level ? 'icon-v' + item.level : ''"></i>
                             </div>
                             <div class="rec-user-memo">
-                                <span class="rec-user-text">昨天发布</span>
-                                <span class="rec-user-text"> | xxx合作社</span>
+                                <span class="rec-user-text">{{releaseInfoDate(item.sort)}}</span>
+                                <span class="rec-user-text" v-if="enterpriseName"> | {{enterpriseName}}</span>
                             </div>
                         </div>
-                        <div class="identify-vertification">实名认证</div>
+                        <div class="identify-vertification" v-if="isAuth">实名认证</div>
                     </div>
                 </div>
             </div>
             <div class="recomment-footer">
-                <div class="rec-footer-title">鲤鱼苗</div>
+                <div class="rec-footer-title">{{item.fishTypeName}}</div>
                 <div class="rec-footer-tip">
-                    <span class="tip-one">150-200尾/斤</span>
-                    <span class="tip-one">我在湖南省xx市</span>
+                    <span class="tip-one specifications" v-if="item.specifications">{{item.specifications}}</span>
+                    <span class="tip-one stock" v-if="item.stock">{{item.stock}}</span>
+                    <span class="tip-one address" v-if="item.provinceName || item.cityName">{{`我在${item.provinceName}${item.cityName}`}}</span>
+                    <span class="tip-one buy-time" v-if="getBuyTagText">{{getBuyTagText}}</span>
                 </div>
-                <div class="rec-footer-text">
-                    广州五龙岗水产，专注于鱼苗的保种，育种，繁育各种淡水鱼苗，公司模式，信誉有保证，是您养殖的首选☺️☺️
-                </div>
+                <div class="rec-footer-text" v-if="item.description">{{item.description}}</div>
 
             </div>
         </div>
@@ -58,21 +64,68 @@
     /**
      *  出售/求购列表的item
      */
+    import {releaseInfoDate, getMarketTimeStr, getBuyTimeText} from '~utils/dateFormat'
+
     export default {
         name: 'customer-list-item',
         props: {
             item: {
                 type: Object,
                 default: {
-                    type: 1
+                    type: 2
                 }
+            },
+            isAuth: {
+                type: Boolean,
+                default: false
+            },
+            enterpriseName: {
+                type: String,
+                default: ''
             }
         },
         methods: {
-
+            releaseInfoDate: releaseInfoDate,
+            getMarketTimeStr: getMarketTimeStr,
+            getCertType(type) {
+                let cert = ''
+                type === 6 && (cert = 'identity')
+                type === 1 && (cert = 'seedling')
+                type === 5 && (cert = 'blue')
+                type === 4 && (cert = 'agriculture')
+                type === 3 && (cert = 'check')
+                type === 2 && (cert = 'water')
+                return cert
+            }
         },
         computed: {
-
+            isSellTime() {
+                let res = false
+                this.item.demandInfoSale && !this.item.demandInfoSale.hasSpotGoods && this.item.demandInfoSale.marketTime * 1000 > new Date().getTime() && (res = true)
+                return res
+            },
+            getImgHead() {
+                let src = ''
+                const res = this.item
+                src = res.headImg ? (res.headImg + '?x-oss-process=image/resize,m_fill,h_100,w_100/circle,r_100/format,png') : '../img/head.png'
+                // @1e_1c_2o_0l_110h_110w_90q.src
+                return src
+            },
+            getBuyTagText() {
+                let res = ''
+                if (this.item.demandInfoBuy && this.item.demandInfoBuy.endTime && this.item.demandInfoBuy.endTime > new Date().getTime()) {
+                    res = getBuyTimeText(this.item.demandInfoBuy.endTime)
+                }
+                return res
+            },
+            getPrice() {
+                let res = '价格面议'
+                const sale = this.item.demandInfoSale
+                if (sale && (sale.lowerPrice || sale.expectedPrice)) {
+                    res = 'x.xx元/斤'
+                }
+                return res
+            }
         }
     }
 </script>
@@ -87,6 +140,7 @@
     padding: 1rem;
 
     &.buy-item{
+        white-space: normal;
         .item-content{
             padding-bottom: 0.2rem;
             margin-left: 0;
@@ -105,7 +159,7 @@
                 }
             }
             .item-inner{
-                padding: 0 1rem;
+                padding-left: 1rem;
                 margin-left: 0;
                 display: flex;
                 .col-70{
@@ -162,7 +216,7 @@
                     color: #101013;
                     letter-spacing: .038rem;
                     line-height: 2.5rem;
-                    padding: 1rem 1rem 1rem 0;
+                    padding: 1rem 0;
             }
             .rec-footer-tip{
                 span{
@@ -178,13 +232,24 @@
                             border: 1px solid #ED5B20;
                             color: #ED5B20;
                         }
+                        &.stock{
+                            border: 1px solid #21CEA0;
+                            color: #21CEA0;
+                        }
+                        &.address{
+                            border: 1px solid #008AF1;
+                            color: #008AF1;
+                        }
+                        &.buy-time{
+                            border: 1px solid #9d9d9d;
+                            color: #9d9d9d;
+                        }
                 }
             }
             .rec-footer-text{
                     font-size: 1.4rem;
                     color: #747474;
                     letter-spacing: .03rem;
-                    padding-right: 1rem;
                     padding-top: .8rem;
                     word-break: break-all;
                     white-space: normal;
@@ -200,7 +265,8 @@
         p{
             position: relative;
             overflow: hidden;
-            line-height: 1.5;
+            line-height: 1.4;
+
             .text-hide;
             &.title{
                 color: #101013;
@@ -289,6 +355,7 @@
                 background: fade(#DF4048, 20%);
                 color: #DF4048;
                 margin-top: 0.4rem;
+                margin-bottom: 0.6rem;
                 i{
                     position: relative;
                     font-size: 1.4rem;
@@ -297,20 +364,97 @@
                 }
             }
             &.cert{
-                color: #a9a9a9;
                 height: 2rem;
-                margin-top: 0.6rem;
+                margin-top: 0.2rem;
+                color: #a9a9a9;
+                font-size: 1.2rem;
                 &:before{
-                    content: '苗';
                     position: relative;
                     display: inline-block;
                     padding: 0rem 0.3rem;
-                    background: #47B913;
-                    color: #fff;
                     margin-right: 0.5rem;
+                    border-radius: 0.1rem;
+                }
+                &.seedling{
+                    &:before{
+                        content: '苗';
+                        border: 1px solid #47B913;
+                        color: #47B913;
+                    }
+                    &:after{
+                        content: '具备“苗种生产许可证”';
+                    }
+                }
+
+                &.identity{
+                    &:before{
+                        content: '证';
+                        background: #DF4048;
+                        color: #fff;
+                    }
+                    &:after{
+                        content: '具备“有机产品认证证书”';
+                    }
+                }
+                &.blue{
+                    &:before{
+                        content: '证';
+                        background: #DF4048;
+                        color: #fff;
+                    }
+                    &:after{
+                        content: '具备“绿色食品证书”';
+                    }
+                }
+                &.agriculture{
+                    &:before{
+                        content: '证';
+                        background: #DF4048;
+                        color: #fff;
+                    }
+                    &:after{
+                        content: '具备“无公害农产品产地认证证书”';
+                    }
+                }
+                &.check{
+                    &:before{
+                        content: '检';
+                        border: 1px solid #F68E1F;
+                        color: #F68E1F;
+                    }
+                    &:after{
+                        content: '具备“检验检疫合格证”';
+                    }
+                }
+                &.water{
+                    &:before{
+                        content: '水';
+                        border: 1px solid #008AF1;
+                        color: #008AF1;
+                    }
+                    &:after{
+                        content: '具备“水产养殖许可证”';
+                    }
                 }
             }
         }
+        @media screen and (max-width: 321px){
+            p{
+                line-height: 1.2;
+                &.name{
+                    line-height: 1.1;
+                }
+            }
+        }
+        @media screen and (min-width: 376px) {
+            p{
+                line-height: 1.7;
+                &.name{
+                    line-height: 1.5;
+                }
+            }
+        }
+
     }
 }
 </style>
