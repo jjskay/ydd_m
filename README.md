@@ -19,6 +19,7 @@ $ node server.js
 # 生产环境部署
 全局安装PM2 
 npm i pm2 -g
+pm2 start server.js
 
 # e2e 测试
 先执行命令启动项目: npm run dev
